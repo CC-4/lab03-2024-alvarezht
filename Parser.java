@@ -133,9 +133,129 @@ public class Parser {
         return E() && term(Token.SEMI);
     }
 
-    private boolean E() {
+    /* TODO: sus otras funciones aqui */
+
+
+    private boolean E(){
+        if(A() && E1())return true;
+
         return false;
     }
 
-    /* TODO: sus otras funciones aqui */
+
+    private boolean E1(){
+        int save = next;
+        next = save;
+
+        if(this.next < this.tokens.size()){
+            if(ESUMA())return true;
+
+            next = save;
+
+            if(ERESTA())return true;
+        }
+        
+        return false;
+    }
+
+    private boolean ESUMA(){
+        return term(Token.PLUS) && A() && E1();
+    }
+
+    private boolean ERESTA(){
+        return term(Token.MINUS) && A() && E1();
+    }
+
+
+    private boolean A(){
+        
+        if(M() && A1())return true;
+
+        return false;
+    }
+
+    private boolean A1(){
+        int save = next;
+        next = save;
+        
+        if(this.next < this.tokens.size()){
+            if(AMULT())return true;
+                
+            next = save;
+            if(ADIV())return true;
+
+            next = save;
+            if(AMOD())return true;
+
+        }
+        
+        return false;
+    }
+
+
+    private boolean AMULT(){
+        return term(Token.MULT) && M() && A1();
+    }
+
+    private boolean ADIV(){
+        return term(Token.DIV) && M() && A1();
+    }
+
+    private boolean AMOD(){
+        return term(Token.MOD) && M() && A1();
+    }
+
+
+
+
+    private boolean M(){
+
+        if(P() && M1())return true;
+
+        return false;
+    }
+
+    private boolean M1(){
+        int save = next;
+        next = save;
+        
+
+        if(this.next < this.tokens.size()){
+            if(term(Token.EXP) && M1())return true;
+        }
+        
+
+        return false;
+    }
+
+
+
+
+    private boolean PNEG() {
+        return term(Token.MINUS) && P();
+    }
+    
+
+    private boolean N(){
+        return term(Token.NUMBER);
+    }
+
+    private boolean P() {
+        int save = next;
+
+        next = save;
+        if(N())return true;
+
+        next = save;
+        if(EPAREN())return true;
+
+        next = save;
+        if(PNEG())return true;
+
+        return false;
+    }
+
+
+    
+
 }
